@@ -1,14 +1,19 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Exercise } from '../types';
 import { LanguageContext } from '../contexts/LanguageContext';
-import { RefreshIcon } from './Icons';
+import { RefreshIcon, ArrowRightIcon, ArrowLeftIcon } from './Icons';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 interface QuizProps {
   exercises: Exercise[];
   onQuizComplete: () => void;
+  hasNextChapter?: boolean;
+  onNextChapter?: () => void;
 }
 
-export const Quiz: React.FC<QuizProps> = ({ exercises, onQuizComplete }) => {
+export const Quiz: React.FC<QuizProps> = ({ exercises, onQuizComplete, hasNextChapter = false, onNextChapter }) => {
   const { t, language } = useContext(LanguageContext);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -57,58 +62,111 @@ export const Quiz: React.FC<QuizProps> = ({ exercises, onQuizComplete }) => {
   if (isFinished) {
     const isPerfectScore = score === exercises.length;
     return (
-      <div className="mt-12 pt-8 border-t-2 border-dashed border-border">
-        <h3 className="text-2xl font-semibold text-primary mb-4">{t('quizComplete')}</h3>
-        <div className="bg-primary/10 text-primary p-6 rounded-lg text-center">
-          <p className="text-xl font-medium">{t('yourScore')}:</p>
-          <p className="text-4xl font-bold my-2">{score} / {exercises.length}</p>
-           {isPerfectScore && (
-            <p className="font-semibold text-primary/90 mt-2">{t('chapterUnlocked')}</p>
+      <div className={cn(
+        "mt-8 rounded-2xl border border-primary/40 bg-primary/10 p-8 shadow-inner",
+        language === 'ar' ? 'text-right' : 'text-center'
+      )}>
+        <h3 className={cn(
+          "text-2xl font-semibold text-primary",
+          language === 'ar' ? 'text-right' : 'text-center'
+        )}>{t('quizComplete')}</h3>
+        <p className={cn(
+          "mt-3 text-lg text-primary/80",
+          language === 'ar' ? 'text-right' : 'text-center'
+        )}>
+          {t('yourScore')}:
+        </p>
+        <p className={cn(
+          "my-4 text-4xl font-bold text-primary",
+          language === 'ar' ? 'text-right' : 'text-center'
+        )}>
+          {score} / {exercises.length}
+        </p>
+        {isPerfectScore && (
+          <p className={cn(
+            "text-sm font-semibold uppercase tracking-widest text-primary/90",
+            language === 'ar' ? 'text-right' : 'text-center'
+          )}>
+            {t('chapterUnlocked')}
+          </p>
+        )}
+        <div className={cn(
+          "mt-6 flex gap-3",
+          language === 'ar' ? 'justify-start flex-row-reverse' : 'justify-center'
+        )}>
+          {isPerfectScore && hasNextChapter && onNextChapter && (
+            <Button
+              onClick={onNextChapter}
+              className="inline-flex items-center gap-2"
+            >
+              {language === 'ar' ? (
+                <>
+                  <span>{t('nextChapter')}</span>
+                  <ArrowLeftIcon className="h-5 w-5" />
+                </>
+              ) : (
+                <>
+                  <span>{t('nextChapter')}</span>
+                  <ArrowRightIcon className="h-5 w-5" />
+                </>
+              )}
+            </Button>
           )}
-          <button
+          <Button
             onClick={restartQuiz}
-            className="mt-4 inline-flex items-center px-6 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-colors"
+            variant={isPerfectScore && hasNextChapter ? "outline" : "default"}
+            className="inline-flex items-center gap-2"
           >
-            <RefreshIcon className="h-5 w-5 ltr:mr-2 rtl:ml-2" />
+            <RefreshIcon className="h-5 w-5" />
             {t('restartQuiz')}
-          </button>
+          </Button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="mt-12 pt-8 border-t-2 border-dashed border-border">
-      <h3 className="text-2xl font-semibold text-primary mb-6">{t('practiceExercises')}</h3>
-      <div className="bg-secondary p-6 rounded-lg border border-border">
-        <p className="text-lg font-medium text-foreground mb-1">
+    <div className="mt-8 rounded-2xl border border-border/70 bg-card/60 p-6 shadow-sm">
+      <div className={`flex items-center justify-between gap-3 ${language === 'ar' ? 'flex-row-reverse text-right' : ''}`}>
+        <h3 className="text-xl font-semibold text-foreground">
+          {t('practiceExercises')}
+        </h3>
+        <Badge variant="outline" className="text-xs font-medium">
           {t('question')} {currentQuestionIndex + 1}/{exercises.length}
-        </p>
-        <p className={`text-xl text-foreground mb-6 ${language === 'ar' ? 'text-right' : ''}`}>{currentExercise.question}</p>
-        <div className="space-y-3">
-          {currentExercise.options.map((option, index) => {
-            const isSelected = selectedAnswer === index;
-            const isCorrect = currentExercise.correctAnswer === index;
-            
-            let buttonClass = 'bg-background hover:bg-accent border-border text-foreground';
-            if (isSelected) {
-              buttonClass = isCorrect ? 'bg-primary/20 border-primary/40 text-primary' : 'bg-destructive/20 border-destructive/40 text-destructive-foreground';
-            } else if (selectedAnswer !== null && isCorrect) {
-              buttonClass = 'bg-primary/20 border-primary/40 text-primary';
-            }
+        </Badge>
+      </div>
+      <p
+        className={cn(
+          'mt-4 text-lg font-medium text-foreground',
+          language === 'ar' ? 'text-right' : ''
+        )}
+      >
+        {currentExercise.question}
+      </p>
+      <div className="mt-6 grid gap-3">
+        {currentExercise.options.map((option, index) => {
+          const isSelected = selectedAnswer === index;
+          const isCorrect = currentExercise.correctAnswer === index;
 
-            return (
-              <button
-                key={index}
-                onClick={() => handleAnswerSelect(index)}
-                disabled={selectedAnswer !== null}
-                className={`w-full p-4 rounded-md border text-lg transition-colors duration-200 disabled:cursor-not-allowed ${buttonClass} ${language === 'ar' ? 'text-right' : ''}`}
-              >
-                {option}
-              </button>
-            );
-          })}
-        </div>
+          return (
+            <Button
+              key={index}
+              variant="outline"
+              disabled={selectedAnswer !== null}
+              onClick={() => handleAnswerSelect(index)}
+              className={cn(
+                'justify-start border-2 px-4 py-5 text-left text-base transition-all',
+                language === 'ar' ? 'text-right' : '',
+                isSelected && isCorrect && 'border-primary bg-primary/10 text-primary',
+                isSelected && !isCorrect && 'border-destructive bg-destructive/10 text-destructive',
+                !isSelected && selectedAnswer !== null && isCorrect && 'border-primary bg-primary/10 text-primary',
+                selectedAnswer !== null ? 'cursor-not-allowed opacity-100' : ''
+              )}
+            >
+              {option}
+            </Button>
+          );
+        })}
       </div>
     </div>
   );

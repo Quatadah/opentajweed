@@ -1,7 +1,28 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { BookOpenIcon } from './Icons';
+import { ArrowRightIcon, ArrowLeftIcon, LanguagesIcon, SparklesIcon } from './Icons';
 import { LanguageContext } from '../contexts/LanguageContext';
 import { content } from '../constants/content';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 type BookKey = 'hafs' | 'warsh';
 
@@ -48,82 +69,180 @@ export const BookSelection: React.FC<BookSelectionProps> = ({ onSelectBook }) =>
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-4 relative" dir={language === 'ar' ? 'rtl' : 'ltr'}>
-      <div className={`absolute top-4 ${language === 'ar' ? 'left-4' : 'right-4'} flex space-x-2 ${language === 'ar' ? 'space-x-reverse' : ''}`}>
-        <button
-          onClick={() => handleLanguageChange('fr')}
-          className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors shadow-sm border border-border ${
-            language === 'fr' ? 'bg-primary text-primary-foreground' : 'bg-card text-card-foreground hover:bg-accent'
-          }`}
+    <div
+      className="min-h-screen bg-gradient-to-br from-background via-background to-primary/10 text-foreground flex flex-col items-center justify-center px-4 py-8"
+      dir={language === 'ar' ? 'rtl' : 'ltr'}
+    >
+      <div className="absolute inset-x-0 top-0 h-[320px] bg-primary/5 blur-3xl opacity-70 pointer-events-none" />
+      <div className="relative z-10 w-full max-w-5xl space-y-6">
+        <div
+          className={cn(
+            'flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between',
+            language === 'ar' ? 'lg:flex-row-reverse' : ''
+          )}
         >
-          Français
-        </button>
-        <button
-          onClick={() => handleLanguageChange('ar')}
-          className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors shadow-sm border border-border ${
-            language === 'ar' ? 'bg-primary text-primary-foreground' : 'bg-card text-card-foreground hover:bg-accent'
-          }`}
-        >
-          العربية
-        </button>
-      </div>
-
-      <div className="text-center mb-8">
-        <BookOpenIcon className="h-16 w-16 text-primary mx-auto mb-4" />
-        <h1 className="text-4xl font-bold text-foreground mb-2">{t('appTitle')}</h1>
-        <p className="text-lg text-muted-foreground">{t('selectBook')}</p>
-      </div>
-
-      <div className="w-full max-w-4xl grid md:grid-cols-2 gap-6">
-        {/* Riwayah Hafs */}
-        <div className="bg-card p-6 rounded-lg shadow-md border border-border text-center flex flex-col">
-          <h2 className="text-2xl font-bold text-primary mb-2">{t('bookHafsTitle')}</h2>
-          <p className="text-muted-foreground flex-grow">{t('bookHafsDescription')}</p>
-          
-          <div className="mt-6 text-left" dir="ltr">
-            <div className="flex justify-between items-center mb-1">
-                <span className="text-sm font-medium text-muted-foreground">{t('progressLabel')}</span>
-                <span className="text-sm font-medium text-primary">{Math.round(progress.hafs)}%</span>
+          <div className="flex items-center gap-4">
+            <div className="flex h-16 w-16 items-center justify-center rounded-[26px] bg-primary/15 text-primary shadow-inner shadow-primary/10 overflow-hidden p-0">
+              <img src="/logo.png" alt={t('appTitle')} className="h-full w-full object-contain" />
             </div>
-            <div className="w-full bg-secondary rounded-full h-2.5">
-                <div className="bg-primary h-2.5 rounded-full" style={{ width: `${progress.hafs}%` }}></div>
+            <div
+              className={cn(
+                'flex flex-col gap-2',
+                language === 'ar' ? 'items-end text-right' : 'items-start text-left'
+              )}
+            >
+              <Badge variant="muted" className="flex items-center gap-2 px-3 py-1 text-xs font-semibold uppercase tracking-wider">
+                <SparklesIcon className="h-4 w-4" />
+                {t('appTitle')}
+              </Badge>
+              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
+                {t('selectBook')}
+              </h1>
+              <p className="max-w-xl text-sm text-muted-foreground sm:text-base">
+                {t('footerText')}
+              </p>
             </div>
           </div>
 
-          <button
-            onClick={() => onSelectBook('hafs')}
-            className="mt-4 w-full px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-md hover:bg-primary/90 transition-colors"
-          >
-            {t('startLearning')}
-          </button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2 text-sm font-semibold">
+                <LanguagesIcon className="h-5 w-5" />
+                <span>{language === 'ar' ? 'العربية' : 'Français'}</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align={language === 'ar' ? 'end' : 'start'}
+              dir={language === 'ar' ? 'rtl' : 'ltr'}
+            >
+              <DropdownMenuLabel>{t('changeLanguage')}</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onSelect={() => handleLanguageChange('fr')}
+                className={language === 'fr' ? 'bg-accent text-accent-foreground' : ''}
+              >
+                Français
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={() => handleLanguageChange('ar')}
+                className={language === 'ar' ? 'bg-accent text-accent-foreground' : ''}
+              >
+                العربية
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
-        {/* Riwayah Warsh */}
-        <div className="bg-card p-6 rounded-lg shadow-md border border-border text-center flex flex-col">
-          <h2 className="text-2xl font-bold text-primary mb-2">{t('bookWarshTitle')}</h2>
-          <p className="text-muted-foreground flex-grow">{t('bookWarshDescription')}</p>
+        <Separator className="my-8 opacity-70" />
 
-           <div className="mt-6 text-left" dir="ltr">
-            <div className="flex justify-between items-center mb-1">
-                <span className="text-sm font-medium text-muted-foreground">{t('progressLabel')}</span>
-                <span className="text-sm font-medium text-primary">{Math.round(progress.warsh)}%</span>
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card className="relative overflow-hidden border-border/70">
+            <div
+              className={cn(
+                'absolute inset-x-6 top-6 flex items-center justify-between text-xs font-medium text-muted-foreground',
+                language === 'ar' ? 'flex-row-reverse text-right' : ''
+              )}
+            >
+              <Badge variant="secondary">{t('bookHafsTitle')}</Badge>
+              <span className="text-xs uppercase tracking-widest text-primary">
+                {t('progressLabel')}
+              </span>
             </div>
-            <div className="w-full bg-secondary rounded-full h-2.5">
-                <div className="bg-primary h-2.5 rounded-full" style={{ width: `${progress.warsh}%` }}></div>
+            <CardHeader
+              className={cn(
+                'pt-16',
+                language === 'ar' ? 'items-end text-right' : 'items-start text-left'
+              )}
+            >
+              <CardTitle className="text-2xl font-semibold">{t('bookHafsTitle')}</CardTitle>
+              <CardDescription className="text-base leading-relaxed text-muted-foreground">
+                {t('bookHafsDescription')}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div
+                className={cn(
+                  'flex items-center justify-between text-sm',
+                  language === 'ar' ? 'flex-row-reverse text-right' : ''
+                )}
+              >
+                <span className="font-medium text-muted-foreground">
+                  {t('progressLabel')}
+                </span>
+                <span className="font-semibold text-primary">
+                  {Math.round(progress.hafs)}%
+                </span>
+              </div>
+              <Progress value={progress.hafs} />
+            </CardContent>
+            <CardFooter className="mt-auto">
+              <Button className="w-full group" onClick={() => onSelectBook('hafs')}>
+                <span>{t('startLearning')}</span>
+                {language === 'ar' ? (
+                  <ArrowLeftIcon className={cn("h-5 w-5 transition-transform", "group-hover:-translate-x-1.5")} />
+                ) : (
+                  <ArrowRightIcon className={cn("h-5 w-5 transition-transform", "group-hover:translate-x-1.5")} />
+                )}
+              </Button>
+            </CardFooter>
+          </Card>
+
+          <Card className="relative overflow-hidden border-border/70">
+            <div
+              className={cn(
+                'absolute inset-x-6 top-6 flex items-center justify-between text-xs font-medium text-muted-foreground',
+                language === 'ar' ? 'flex-row-reverse text-right' : ''
+              )}
+            >
+              <Badge variant="secondary">{t('bookWarshTitle')}</Badge>
+              <span className="text-xs uppercase tracking-widest text-primary">
+                {t('progressLabel')}
+              </span>
             </div>
-          </div>
-          
-          <button
-            onClick={() => onSelectBook('warsh')}
-            className="mt-4 w-full px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-md hover:bg-primary/90 transition-colors"
-          >
-            {t('startLearning')}
-          </button>
+            <CardHeader
+              className={cn(
+                'pt-16',
+                language === 'ar' ? 'items-end text-right' : 'items-start text-left'
+              )}
+            >
+              <CardTitle className="text-2xl font-semibold">{t('bookWarshTitle')}</CardTitle>
+              <CardDescription className="text-base leading-relaxed text-muted-foreground">
+                {t('bookWarshDescription')}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div
+                className={cn(
+                  'flex items-center justify-between text-sm',
+                  language === 'ar' ? 'flex-row-reverse text-right' : ''
+                )}
+              >
+                <span className="font-medium text-muted-foreground">
+                  {t('progressLabel')}
+                </span>
+                <span className="font-semibold text-primary">
+                  {Math.round(progress.warsh)}%
+                </span>
+              </div>
+              <Progress value={progress.warsh} />
+            </CardContent>
+            <CardFooter className="mt-auto">
+              <Button className="w-full group" onClick={() => onSelectBook('warsh')}>
+                <span>{t('startLearning')}</span>
+                {language === 'ar' ? (
+                  <ArrowLeftIcon className={cn("h-5 w-5 transition-transform", "group-hover:-translate-x-1.5")} />
+                ) : (
+                  <ArrowRightIcon className={cn("h-5 w-5 transition-transform", "group-hover:translate-x-1.5")} />
+                )}
+              </Button>
+            </CardFooter>
+          </Card>
         </div>
-      </div>
-       <footer className="text-center py-4 mt-8 text-muted-foreground text-sm">
+
+        <footer className="mt-12 text-center text-sm text-muted-foreground">
           <p>{t('footerText')}</p>
         </footer>
+      </div>
     </div>
   );
 };

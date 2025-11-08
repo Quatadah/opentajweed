@@ -1,8 +1,22 @@
 import React, { useContext } from 'react';
 import { LanguageContext } from '../contexts/LanguageContext';
 import { ThemeContext } from '../contexts/ThemeContext';
-import { CloseIcon, SunIcon, MoonIcon, ComputerDesktopIcon } from './Icons';
+import { CloseIcon } from './Icons';
+import { Sun, Moon, Monitor } from 'lucide-react';
 import { SettingsContext } from '../contexts/SettingsContext';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -15,8 +29,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, s
   const { theme, setTheme } = useContext(ThemeContext);
   const { isSequentialUnlockEnabled, setIsSequentialUnlockEnabled } = useContext(SettingsContext);
 
-  if (!isOpen) return null;
-
   const handleLanguageChange = (lang: 'fr' | 'ar') => {
     setLanguage(lang);
   };
@@ -24,101 +36,161 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, s
   const isLanguageSwitchDisabled = selectedBook === 'warsh';
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/50 dark:bg-background/80 backdrop-blur-sm"
-      onClick={onClose}
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) {
+          onClose();
+        }
+      }}
     >
-      <div
-        className="bg-card text-card-foreground rounded-lg shadow-xl p-6 w-full max-w-lg m-4 relative border border-border"
-        onClick={(e) => e.stopPropagation()}
+      <DialogContent
+        className="max-w-xl rounded-3xl border border-border/60 bg-card/90 p-6 shadow-2xl backdrop-blur"
         dir={language === 'ar' ? 'rtl' : 'ltr'}
       >
-        <button
-          onClick={onClose}
-          className={`absolute top-3 ${language === 'ar' ? 'left-3' : 'right-3'} text-muted-foreground hover:text-foreground`}
-          aria-label={t('close')}
-        >
-          <CloseIcon className="h-6 w-6" />
-        </button>
-        <h3 className="text-xl font-semibold text-foreground mb-6">{t('settings')}</h3>
-        
-        <div className="space-y-6">
-          <div>
-            <h4 className="text-lg font-medium text-card-foreground mb-3">{t('theme')}</h4>
-            <div className="grid grid-cols-3 gap-2 p-1 bg-muted rounded-lg">
+        <DialogClose asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className={`absolute top-4 ${language === 'ar' ? 'left-4' : 'right-4'} text-muted-foreground hover:text-foreground`}
+            aria-label={t('close')}
+          >
+            <CloseIcon className="h-5 w-5" />
+          </Button>
+        </DialogClose>
+
+        <DialogHeader className={cn(
+          "flex flex-col",
+          language === 'ar' ? 'items-end text-right' : 'items-start text-left'
+        )}>
+          <DialogTitle className={cn(
+            "text-2xl font-semibold w-full",
+            language === 'ar' ? 'text-right' : 'text-left'
+          )}>{t('settings')}</DialogTitle>
+          <DialogDescription className={cn(
+            "text-sm text-muted-foreground w-full",
+            language === 'ar' ? 'text-right' : 'text-left'
+          )}>
+            {t('footerText')}
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="mt-6 space-y-6">
+          <div className="space-y-3">
+            <div className={language === 'ar' ? 'text-right' : 'text-left'}>
+              <h4 className="text-lg font-medium">{t('theme')}</h4>
+            </div>
+            <div className="grid grid-cols-3 gap-2 rounded-xl border border-border/50 bg-muted/40 p-2">
               {[
-                { value: 'light', label: t('light'), icon: SunIcon },
-                { value: 'dark', label: t('dark'), icon: MoonIcon },
-                { value: 'system', label: t('system'), icon: ComputerDesktopIcon },
+                { value: 'light', label: t('light'), icon: Sun },
+                { value: 'dark', label: t('dark'), icon: Moon },
+                { value: 'system', label: t('system'), icon: Monitor },
               ].map(({ value, label, icon: Icon }) => (
-                <button
+                <Button
                   key={value}
+                  variant={theme === value ? 'default' : 'ghost'}
                   onClick={() => setTheme(value as 'light' | 'dark' | 'system')}
-                  className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                    theme === value
-                      ? 'bg-primary text-primary-foreground shadow'
-                      : 'text-muted-foreground hover:bg-background'
-                  }`}
+                  className="flex h-12 flex-col items-center justify-center gap-1 rounded-lg px-3 text-xs font-medium"
                 >
-                  <Icon className="w-5 h-5"/>
+                  <Icon className="h-5 w-5" />
                   {label}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
 
-          <div>
-            <h4 className="text-lg font-medium text-card-foreground mb-3">{t('changeLanguage')}</h4>
-            <div className={`space-y-3 ${isLanguageSwitchDisabled ? 'opacity-50' : ''}`}>
-              <button
+          <Separator className="opacity-60" />
+
+          <div className="space-y-3">
+            <div className={language === 'ar' ? 'text-right' : 'text-left'}>
+              <h4 className="text-lg font-medium">{t('changeLanguage')}</h4>
+              {isLanguageSwitchDisabled && (
+                <p className="text-xs text-muted-foreground">
+                  <Badge variant="outline" className="border-dashed">
+                    {t('bookWarshTitle')}
+                  </Badge>
+                </p>
+              )}
+            </div>
+            <div className={cn(
+              "grid grid-cols-2 gap-3",
+              isLanguageSwitchDisabled ? 'opacity-50' : '',
+              language === 'ar' ? 'grid-flow-row-dense' : ''
+            )}>
+              <Button
+                variant={language === 'fr' ? 'default' : 'outline'}
                 onClick={() => handleLanguageChange('fr')}
                 disabled={isLanguageSwitchDisabled}
-                className={`w-full px-4 py-2 rounded-md text-left font-medium transition-colors ${
-                  language === 'fr' ? 'bg-primary text-primary-foreground' : 'bg-muted hover:bg-accent'
-                } disabled:cursor-not-allowed`}
+                className={cn(language === 'ar' ? 'order-2' : 'order-1')}
               >
                 Français
-              </button>
-              <button
+              </Button>
+              <Button
+                variant={language === 'ar' ? 'default' : 'outline'}
                 onClick={() => handleLanguageChange('ar')}
                 disabled={isLanguageSwitchDisabled}
-                className={`w-full px-4 py-2 rounded-md text-right font-medium transition-colors ${
-                  language === 'ar' ? 'bg-primary text-primary-foreground' : 'bg-muted hover:bg-accent'
-                } disabled:cursor-not-allowed`}
+                className={cn(language === 'ar' ? 'order-1' : 'order-2')}
               >
                 العربية
-              </button>
+              </Button>
             </div>
           </div>
 
-           <div>
-            <h4 className="text-lg font-medium text-card-foreground mb-3">{t('sequentialUnlock')}</h4>
-            <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
-              <p className="text-sm text-muted-foreground max-w-xs">{t('sequentialUnlockDescription')}</p>
-              <button
-                onClick={() => setIsSequentialUnlockEnabled(!isSequentialUnlockEnabled)}
-                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-card ${
-                  isSequentialUnlockEnabled ? 'bg-primary' : 'bg-input'
-                }`}
-              >
-                <span
-                  className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                    isSequentialUnlockEnabled ? (language === 'ar' ? '-translate-x-5' : 'translate-x-5') : 'translate-x-0'
-                  }`}
+          <Separator className="opacity-60" />
+
+          <div className="rounded-2xl border border-border/60 bg-muted/40 p-4">
+            {language === 'ar' ? (
+              <div className="flex items-center justify-between gap-4">
+                <div className="text-right flex-1">
+                  <h4 className="text-base font-semibold text-right">{t('sequentialUnlock')}</h4>
+                  <p className="mt-1 text-sm text-muted-foreground max-w-xs text-right">
+                    {t('sequentialUnlockDescription')}
+                  </p>
+                </div>
+                <Switch
+                  checked={isSequentialUnlockEnabled}
+                  onCheckedChange={setIsSequentialUnlockEnabled}
                 />
-              </button>
-            </div>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between gap-4">
+                <div className="text-left flex-1">
+                  <h4 className="text-base font-semibold text-left">{t('sequentialUnlock')}</h4>
+                  <p className="mt-1 text-sm text-muted-foreground max-w-xs text-left">
+                    {t('sequentialUnlockDescription')}
+                  </p>
+                </div>
+                <Switch
+                  checked={isSequentialUnlockEnabled}
+                  onCheckedChange={setIsSequentialUnlockEnabled}
+                />
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="mt-6 pt-6 border-t border-border">
-            <h4 className="text-lg font-semibold text-foreground mb-2">{t('creditsTitle')}</h4>
-            <div className="text-sm text-muted-foreground space-y-2">
-              <p><strong>{t('bookHafsTitle')}:</strong> {t('creditsHafsText')}</p>
-              <p><strong>{t('bookWarshTitle')}:</strong> {t('creditsWarshText')}</p>
-            </div>
+        <div className={cn(
+          "mt-8 space-y-4 rounded-2xl border border-border/50 bg-accent/30 p-4",
+          language === 'ar' ? 'text-right' : 'text-left'
+        )}>
+          <h4 className={cn(
+            "text-lg font-semibold text-foreground",
+            language === 'ar' ? 'text-right' : 'text-left'
+          )}>{t('creditsTitle')}</h4>
+          <p className={cn(
+            "text-sm text-muted-foreground",
+            language === 'ar' ? 'text-right' : 'text-left'
+          )}>
+            <strong>{t('bookHafsTitle')}:</strong> {t('creditsHafsText')}
+          </p>
+          <p className={cn(
+            "text-sm text-muted-foreground",
+            language === 'ar' ? 'text-right' : 'text-left'
+          )}>
+            <strong>{t('bookWarshTitle')}:</strong> {t('creditsWarshText')}
+          </p>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 };

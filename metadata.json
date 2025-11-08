@@ -1,0 +1,5 @@
+{
+  "name": "OpenTajweed",
+  "description": "An interactive web application designed to help users learn the rules of Tajweed for reciting the Holy Qur'an. This app provides a structured, easy-to-navigate guide based on classic Tajweed literature, with clear explanations in French and examples in Arabic.",
+  "requestFramePermissions": []
+}

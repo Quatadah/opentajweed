@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { ArrowRightIcon, ArrowLeftIcon, LanguagesIcon, SparklesIcon } from './Icons';
+import { Github } from 'lucide-react';
 import { LanguageContext } from '../contexts/LanguageContext';
 import { content } from '../constants/content';
 import { cn } from '@/lib/utils';
@@ -69,13 +70,13 @@ export const BookSelection: React.FC<BookSelectionProps> = ({ onSelectBook }) =>
   };
 
   return (
-    <div
+    <main
       className="min-h-screen bg-gradient-to-br from-background via-background to-primary/10 text-foreground flex flex-col items-center justify-center px-4 py-8"
       dir={language === 'ar' ? 'rtl' : 'ltr'}
     >
-      <div className="absolute inset-x-0 top-0 h-[320px] bg-primary/5 blur-3xl opacity-70 pointer-events-none" />
+      <div className="absolute inset-x-0 top-0 h-[320px] bg-primary/5 blur-3xl opacity-70 pointer-events-none" aria-hidden="true" />
       <div className="relative z-10 w-full max-w-5xl space-y-6">
-        <div
+        <header
           className={cn(
             'flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between',
             language === 'ar' ? 'lg:flex-row-reverse' : ''
@@ -83,7 +84,7 @@ export const BookSelection: React.FC<BookSelectionProps> = ({ onSelectBook }) =>
         >
           <div className="flex items-center gap-4">
             <div className="flex h-16 w-16 items-center justify-center rounded-[26px] bg-primary/15 text-primary shadow-inner shadow-primary/10 overflow-hidden p-0">
-              <img src="/logo.png" alt={t('appTitle')} className="h-full w-full object-contain" />
+              <img src="/logo.png" alt={`${t('appTitle')} - ${t('footerText')}`} className="h-full w-full object-contain" />
             </div>
             <div
               className={cn(
@@ -92,7 +93,7 @@ export const BookSelection: React.FC<BookSelectionProps> = ({ onSelectBook }) =>
               )}
             >
               <Badge variant="muted" className="flex items-center gap-2 px-3 py-1 text-xs font-semibold uppercase tracking-wider">
-                <SparklesIcon className="h-4 w-4" />
+                <SparklesIcon className="h-4 w-4" aria-hidden="true" />
                 {t('appTitle')}
               </Badge>
               <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
@@ -131,12 +132,12 @@ export const BookSelection: React.FC<BookSelectionProps> = ({ onSelectBook }) =>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        </div>
+        </header>
 
-        <Separator className="my-8 opacity-70" />
+        <Separator className="my-8 opacity-70" aria-hidden="true" />
 
-        <div className="grid gap-6 md:grid-cols-2">
-          <Card className="relative overflow-hidden border-border/70">
+        <section className="grid gap-6 md:grid-cols-2" aria-label={t('selectBook')}>
+          <Card className="relative overflow-hidden border-border/70" role="article" aria-labelledby="hafs-title">
             <div
               className={cn(
                 'absolute inset-x-6 top-6 flex items-center justify-between text-xs font-medium text-muted-foreground',
@@ -154,7 +155,7 @@ export const BookSelection: React.FC<BookSelectionProps> = ({ onSelectBook }) =>
                 language === 'ar' ? 'items-end text-right' : 'items-start text-left'
               )}
             >
-              <CardTitle className="text-2xl font-semibold">{t('bookHafsTitle')}</CardTitle>
+              <CardTitle id="hafs-title" className="text-2xl font-semibold">{t('bookHafsTitle')}</CardTitle>
               <CardDescription className="text-base leading-relaxed text-muted-foreground">
                 {t('bookHafsDescription')}
               </CardDescription>
@@ -187,7 +188,7 @@ export const BookSelection: React.FC<BookSelectionProps> = ({ onSelectBook }) =>
             </CardFooter>
           </Card>
 
-          <Card className="relative overflow-hidden border-border/70">
+          <Card className="relative overflow-hidden border-border/70" role="article" aria-labelledby="warsh-title">
             <div
               className={cn(
                 'absolute inset-x-6 top-6 flex items-center justify-between text-xs font-medium text-muted-foreground',
@@ -205,7 +206,7 @@ export const BookSelection: React.FC<BookSelectionProps> = ({ onSelectBook }) =>
                 language === 'ar' ? 'items-end text-right' : 'items-start text-left'
               )}
             >
-              <CardTitle className="text-2xl font-semibold">{t('bookWarshTitle')}</CardTitle>
+              <CardTitle id="warsh-title" className="text-2xl font-semibold">{t('bookWarshTitle')}</CardTitle>
               <CardDescription className="text-base leading-relaxed text-muted-foreground">
                 {t('bookWarshDescription')}
               </CardDescription>
@@ -237,12 +238,60 @@ export const BookSelection: React.FC<BookSelectionProps> = ({ onSelectBook }) =>
               </Button>
             </CardFooter>
           </Card>
-        </div>
+        </section>
+
+        <aside className={cn(
+          "mt-8",
+          language === 'ar' ? 'text-right' : 'text-left'
+        )} aria-label={t('openSourceTitle')}>
+          <Card className="border-primary/20 bg-primary/5">
+          <CardHeader
+            className={cn(
+              'text-center',
+              language === 'ar' ? 'items-end' : 'items-start'
+            )}
+          >
+            <CardTitle className={cn(
+              "text-xl font-semibold flex items-center gap-2",
+              language === 'ar' ? 'justify-center flex-row-reverse' : 'justify-center'
+            )}>
+              <SparklesIcon className="h-5 w-5 text-primary" />
+              {t('openSourceTitle')}
+            </CardTitle>
+            <CardDescription className="text-base mt-2">
+              {t('openSourceDescription')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="text-center">
+            <p className="text-sm text-muted-foreground mb-4">
+              {t('contributeDescription')}
+            </p>
+            <Button
+              asChild
+              variant="default"
+              className={cn(
+                "gap-2 group",
+                language === 'ar' ? 'flex-row-reverse' : ''
+              )}
+            >
+              <a
+                href="https://github.com/Quatadah/opentajweed"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center"
+              >
+                <Github className="h-5 w-5" />
+                <span>{t('contributeText')}</span>
+              </a>
+            </Button>
+          </CardContent>
+          </Card>
+        </aside>
 
         <footer className="mt-12 text-center text-sm text-muted-foreground">
           <p>{t('footerText')}</p>
         </footer>
       </div>
-    </div>
+    </main>
   );
 };

@@ -10,7 +10,17 @@ const App: React.FC = () => {
     return localStorage.getItem('tajweed-book') as BookKey | null;
   });
 
-  const { setLanguage } = useContext(LanguageContext);
+  const { setLanguage, language, t } = useContext(LanguageContext);
+
+  // Update document title for SEO
+  useEffect(() => {
+    if (selectedBook) {
+      const bookTitle = selectedBook === 'hafs' ? t('bookHafsTitle') : t('bookWarshTitle');
+      document.title = `${bookTitle} - OpenTajweed`;
+    } else {
+      document.title = 'OpenTajweed - Learn Tajweed Rules for Quran Recitation';
+    }
+  }, [selectedBook, language, t]);
 
   useEffect(() => {
     if (selectedBook) {

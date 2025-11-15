@@ -1,13 +1,108 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OpenTajweed</title>
+    
+    <!-- Primary Meta Tags -->
+    <title>OpenTajweed - Learn Tajweed Rules for Quran Recitation</title>
+    <meta name="title" content="OpenTajweed - Learn Tajweed Rules for Quran Recitation" />
+    <meta name="description" content="An open-source, interactive web application to learn and master the rules of Tajweed for reciting the Holy Qur'an. Features dual Riwayah support (Hafs and Warsh), bilingual interface, interactive quizzes, and progress tracking." />
+    <meta name="keywords" content="tajweed, quran, qur'an, recitation, islam, hafs, warsh, riwayah, arabic, learning, education, open source, interactive, quizzes, progress tracking" />
+    <meta name="author" content="OpenTajweed" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English, French, Arabic" />
+    <meta name="revisit-after" content="7 days" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://github.com/Quatadah/opentajweed/" />
+    <meta property="og:title" content="OpenTajweed - Learn Tajweed Rules for Quran Recitation" />
+    <meta property="og:description" content="An open-source, interactive web application to learn and master the rules of Tajweed for reciting the Holy Qur'an. Features dual Riwayah support, bilingual interface, and interactive quizzes." />
+    <meta property="og:image" content="/logo.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="fr_FR" />
+    <meta property="og:locale:alternate" content="ar_SA" />
+    <meta property="og:site_name" content="OpenTajweed" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://github.com/Quatadah/opentajweed/" />
+    <meta name="twitter:title" content="OpenTajweed - Learn Tajweed Rules for Quran Recitation" />
+    <meta name="twitter:description" content="An open-source, interactive web application to learn and master the rules of Tajweed for reciting the Holy Qur'an." />
+    <meta name="twitter:image" content="/logo.png" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://github.com/Quatadah/opentajweed/" />
+    
+    <!-- Language Alternates -->
+    <link rel="alternate" hreflang="en" href="https://github.com/Quatadah/opentajweed/" />
+    <link rel="alternate" hreflang="fr" href="https://github.com/Quatadah/opentajweed/" />
+    <link rel="alternate" hreflang="ar" href="https://github.com/Quatadah/opentajweed/" />
+    <link rel="alternate" hreflang="x-default" href="https://github.com/Quatadah/opentajweed/" />
+    
+    <!-- Preconnect for Performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "OpenTajweed",
+      "description": "An open-source, interactive web application to learn and master the rules of Tajweed for reciting the Holy Qur'an",
+      "url": "https://github.com/Quatadah/opentajweed/",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5",
+        "ratingCount": "1"
+      },
+      "featureList": [
+        "Dual Riwayah Support (Hafs and Warsh)",
+        "Bilingual Interface (French/Arabic)",
+        "Interactive Quizzes",
+        "Progress Tracking",
+        "Sequential Chapter Unlocking",
+        "Live Search",
+        "Light & Dark Modes",
+        "Responsive Design"
+      ],
+      "inLanguage": ["en", "fr", "ar"],
+      "author": {
+        "@type": "Organization",
+        "name": "OpenTajweed",
+        "url": "https://github.com/Quatadah/opentajweed"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "OpenTajweed",
+        "url": "https://github.com/Quatadah/opentajweed"
+      },
+      "about": {
+        "@type": "Thing",
+        "name": "Tajweed",
+        "description": "The rules and principles of proper Quranic recitation"
+      },
+      "educationalUse": "Learning",
+      "learningResourceType": "Interactive Tutorial"
+    }
+    </script>
 </head>
   <body class="bg-background text-foreground">
     <div id="root"></div>

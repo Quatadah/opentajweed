@@ -42,6 +42,10 @@ export const locales: { [key: string]: { [key: string]: string } } = {
     nextChapter: "Chapitre suivant",
     practiceAlert: "Important : Veuillez compléter les exercices pratiques avant de passer au chapitre suivant.",
     goToPractice: "Aller aux exercices",
+    openSourceTitle: "Open Source",
+    openSourceDescription: "Cette application est open source et ouverte à toute contribution !",
+    contributeText: "Contribuez sur GitHub",
+    contributeDescription: "Rejoignez-nous pour améliorer OpenTajweed et aider d'autres apprenants.",
   },
   ar: {
     appTitle: "OpenTajweed",
@@ -86,5 +90,9 @@ export const locales: { [key: string]: { [key: string]: string } } = {
     nextChapter: "الفصل التالي",
     practiceAlert: "مهم: يرجى إكمال التمارين التطبيقية قبل الانتقال إلى الفصل التالي.",
     goToPractice: "الذهاب إلى التطبيق",
+    openSourceTitle: "مفتوح المصدر",
+    openSourceDescription: "هذا التطبيق مفتوح المصدر ومفتوح لأي مساهمة!",
+    contributeText: "ساهم على GitHub",
+    contributeDescription: "انضم إلينا لتحسين OpenTajweed ومساعدة المتعلمين الآخرين.",
   },
 };
